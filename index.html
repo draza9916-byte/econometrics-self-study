@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>练习1-5 自学题库</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">学</div>
+        <div>
+          <p class="eyebrow">自学题库</p>
+          <h1>练习 1-5</h1>
+        </div>
+      </div>
+
+      <div class="tool-block">
+        <button class="primary-action" id="randomExam" type="button">
+          <span aria-hidden="true">↻</span>
+          随机抽取 40 题
+        </button>
+        <button class="ghost-action" id="resetOrder" type="button">恢复完整题库</button>
+        <p id="modeHint">当前为完整自学模式，可以从上往下连续练习。</p>
+      </div>
+
+      <div class="nav-head">
+        <span>三大题型</span>
+        <b id="questionCount">8 题样例</b>
+      </div>
+      <nav class="section-nav" id="sectionNav" aria-label="题型目录"></nav>
+    </aside>
+
+    <main class="workspace">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">章节练习 · 连续自学</p>
+          <h2>练习 1-5 自学题库</h2>
+        </div>
+        <div class="toolbar">
+          <button class="icon-button" id="decreaseFont" type="button" title="缩小字体">A-</button>
+          <button class="icon-button" id="increaseFont" type="button" title="放大字体">A+</button>
+          <button class="theme-toggle" id="themeToggle" type="button" title="切换明暗背景">
+            <span class="theme-icon" aria-hidden="true">●</span>
+            <span class="toggle-text">暗色</span>
+          </button>
+        </div>
+      </header>
+
+      <section class="paper-flow" id="paperFlow" aria-label="题目列表"></section>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [["\\(", "\\)"]],
+        displayMath: [["\\[", "\\]"]]
+      },
+      chtml: {
+        scale: 1
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+  <script src="./script.js"></script>
+</body>
+</html>
