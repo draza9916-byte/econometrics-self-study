@@ -3512,7 +3512,6 @@ function renderQuestionCard(question, indexInSection) {
         }).join("")}
       </div>
       <div class="answer-actions">
-        <span class="instant-tip">${selected.length ? "已自动显示答案和讲解" : "选项点击后自动显示答案和讲解，无需提交。"}</span>
         <button class="ghost-action" type="button" data-review="${question.id}">${reviewSet.has(question.id) ? "取消待复习" : "标记待复习"}</button>
       </div>
       <div class="answer-panel" ${submitted ? "" : "hidden"}>
@@ -3586,7 +3585,7 @@ document.querySelector("#randomExam").addEventListener("click", () => {
 document.querySelector("#resetOrder").addEventListener("click", () => {
   mode = "full";
   activeQuestions = [...questionBank];
-  modeHint.textContent = "电脑版 · 连续刷题，选项点击即反馈";
+  modeHint.textContent = "电脑版 · 连续刷题";
   renderSections();
   window.scrollTo({ top: 0, behavior: "smooth" });
 });
@@ -3609,6 +3608,6 @@ document.querySelector("#decreaseFont").addEventListener("click", () => {
 document.body.id = "top";
 
 activeQuestions = [...questionBank];
-modeHint.textContent = "电脑版 · 连续刷题，选项点击即反馈";
+modeHint.textContent = "电脑版 · 连续刷题";
 renderSections();
 
