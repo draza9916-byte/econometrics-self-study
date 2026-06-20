@@ -1,10 +1,18 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>练习1-5 自学题库</title>
   <link rel="stylesheet" href="./style.css">
+  <script>
+    (function () {
+      var isMobile = window.matchMedia("(max-width: 760px)").matches;
+      var isMobilePage = /mobile\.html$/.test(location.pathname);
+      var forceDesktop = new URLSearchParams(location.search).get("desktop") === "1";
+      if (isMobile && !isMobilePage && !forceDesktop) location.replace("./mobile.html");
+    })();
+  </script>
 </head>
 <body>
   <div class="app-shell">
@@ -23,6 +31,7 @@
           随机抽取 40 题
         </button>
         <button class="ghost-action" id="resetOrder" type="button">恢复完整题库</button>
+        <a class="ghost-action mobile-entry" href="./mobile.html">手机版滑动刷题</a>
         <p id="modeHint">当前为完整自学模式，可以从上往下连续练习。</p>
       </div>
 

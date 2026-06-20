@@ -217,6 +217,12 @@ h1 {
   margin-top: 10px;
 }
 
+.mobile-entry {
+  display: block;
+  margin-top: 10px;
+  text-align: center;
+}
+
 #modeHint {
   margin: 12px 0 0;
   color: var(--muted);
@@ -749,4 +755,26 @@ h1 {
   .symbol-list dl {
     grid-template-columns: 1fr;
   }
+}
+
+
+.instant-tip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 38px;
+  border-radius: 8px;
+  padding: 8px 11px;
+  background: var(--warm-soft);
+  color: color-mix(in srgb, var(--ink) 78%, var(--warm));
+  font-weight: 900;
+}
+
+.option.correct {
+  border-color: color-mix(in srgb, var(--good) 72%, var(--line));
+  background: color-mix(in srgb, var(--good) 14%, var(--panel));
+}
+
+.option.wrong {
+  border-color: color-mix(in srgb, var(--bad) 72%, var(--line));
+  background: color-mix(in srgb, var(--bad) 12%, var(--panel));
 }

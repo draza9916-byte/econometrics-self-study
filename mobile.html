@@ -1,0 +1,646 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>练习1-5 自学题库 · 手机版</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f3ee;
+      --panel: #fffdf8;
+      --panel-soft: #edf7f4;
+      --ink: #18212f;
+      --muted: #667085;
+      --line: #ded8cf;
+      --accent: #108a80;
+      --warm: #f4a62a;
+      --warm-soft: #fff3d8;
+      --good: #159764;
+      --bad: #d94b4b;
+      --shadow: 0 18px 48px rgba(33, 38, 48, .16);
+    }
+
+    body.dark {
+      color-scheme: dark;
+      --bg: #11161d;
+      --panel: #1d2630;
+      --panel-soft: #182f32;
+      --ink: #f3f7fb;
+      --muted: #aab5c2;
+      --line: #33404e;
+      --accent: #69d2c5;
+      --warm: #ffd166;
+      --warm-soft: #332917;
+      --good: #73d8a4;
+      --bad: #ff858a;
+      --shadow: 0 18px 48px rgba(0, 0, 0, .32);
+    }
+
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    html, body { min-height: 100%; overflow-x: hidden; }
+    body {
+      margin: 0;
+      background:
+        linear-gradient(180deg, color-mix(in srgb, var(--panel-soft) 55%, transparent), transparent 280px),
+        var(--bg);
+      color: var(--ink);
+      font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.65;
+    }
+
+    button { font: inherit; }
+
+    .mobile-shell {
+      min-height: 100vh;
+      padding: 12px 12px 20px;
+    }
+
+    .mobile-top {
+      position: sticky;
+      top: 0;
+      z-index: 6;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      background: color-mix(in srgb, var(--panel) 94%, transparent);
+      box-shadow: 0 10px 32px rgba(33, 38, 48, .08);
+      backdrop-filter: blur(16px);
+    }
+
+    .brand-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      margin: 0 0 4px;
+      color: var(--accent);
+      font-size: .76rem;
+      font-weight: 900;
+      letter-spacing: 0;
+    }
+
+    h1, h2, h3, h4, h5, p { margin-top: 0; }
+    h1 {
+      margin: 0;
+      font-size: 1.18rem;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+
+    .desktop-link {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 8px 10px;
+      background: var(--panel-soft);
+      color: var(--accent);
+      font-size: .86rem;
+      font-weight: 900;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .progress-text {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    .bar {
+      height: 8px;
+      margin-top: 8px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: var(--panel-soft);
+    }
+
+    .bar i {
+      display: block;
+      height: 100%;
+      width: 0;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--accent), var(--warm));
+      transition: width .2s ease;
+    }
+
+    .stage {
+      position: relative;
+      margin-top: 12px;
+      min-height: 62vh;
+    }
+
+    .slide {
+      width: 100%;
+      transition: transform .34s cubic-bezier(.22, .9, .24, 1), opacity .26s ease;
+      will-change: transform, opacity;
+    }
+
+    .slide.enter-right { transform: translateX(110%); opacity: 0; }
+    .slide.enter-left { transform: translateX(-110%); opacity: 0; }
+    .slide.enter-pop { transform: scale(.985); opacity: .35; }
+    .slide.active { transform: translateX(0) scale(1); opacity: 1; }
+    .slide.exit-left { position: absolute; inset: 0; transform: translateX(-110%); opacity: 0; }
+    .slide.exit-right { position: absolute; inset: 0; transform: translateX(110%); opacity: 0; }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    .q-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: start;
+      margin-bottom: 12px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 27px;
+      border-radius: 8px;
+      padding: 4px 9px;
+      background: var(--panel-soft);
+      color: var(--accent);
+      font-size: .78rem;
+      font-weight: 900;
+    }
+
+    .source {
+      color: var(--muted);
+      font-size: .82rem;
+      white-space: nowrap;
+    }
+
+    .stem {
+      margin-bottom: 16px;
+      font-size: 1.18rem;
+      font-weight: 900;
+      line-height: 1.72;
+      letter-spacing: 0;
+    }
+
+    .options {
+      display: grid;
+      gap: 9px;
+    }
+
+    .option {
+      display: grid;
+      grid-template-columns: 32px minmax(0, 1fr);
+      gap: 10px;
+      align-items: center;
+      width: 100%;
+      min-height: 54px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      background: color-mix(in srgb, var(--panel) 90%, var(--panel-soft));
+      color: var(--ink);
+      text-align: left;
+    }
+
+    .key {
+      display: grid;
+      place-items: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      background: var(--panel-soft);
+      color: var(--accent);
+      font-weight: 900;
+    }
+
+    .option.selected {
+      border-color: var(--accent);
+      background: color-mix(in srgb, var(--panel-soft) 70%, var(--panel));
+    }
+
+    .option.correct {
+      border-color: color-mix(in srgb, var(--good) 72%, var(--line));
+      background: color-mix(in srgb, var(--good) 14%, var(--panel));
+    }
+
+    .option.wrong {
+      border-color: color-mix(in srgb, var(--bad) 72%, var(--line));
+      background: color-mix(in srgb, var(--bad) 12%, var(--panel));
+    }
+
+    .hint {
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    .answer-panel {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+      border-radius: 8px;
+      padding: 12px;
+      background: var(--panel-soft);
+      animation: reveal .22s ease both;
+    }
+
+    @keyframes reveal {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .answer-panel div,
+    .answer-panel b {
+      border-radius: 8px;
+      padding: 10px;
+      background: var(--panel);
+    }
+
+    .answer-panel span {
+      display: block;
+      color: var(--muted);
+      font-size: .82rem;
+    }
+
+    .answer-panel strong {
+      display: block;
+      margin-top: 4px;
+    }
+
+    .answer-panel b.ok { color: var(--good); }
+    .answer-panel b.bad { color: var(--bad); }
+
+    .explain-panel {
+      margin-top: 14px;
+      border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--line));
+      border-left: 5px solid var(--accent);
+      border-radius: 8px;
+      padding: 14px;
+      background: var(--panel);
+      animation: reveal .22s ease both;
+    }
+
+    .explain-panel h4 {
+      margin: 0 0 8px;
+      font-size: 1rem;
+    }
+
+    .formula-box {
+      display: grid;
+      gap: 8px;
+      margin: 10px 0;
+      border: 1px solid color-mix(in srgb, var(--warm) 42%, var(--line));
+      border-radius: 8px;
+      padding: 12px;
+      background: linear-gradient(90deg, var(--warm-soft), color-mix(in srgb, var(--panel) 82%, transparent));
+      overflow-x: auto;
+    }
+
+    .formula-box p,
+    .analysis-box p {
+      margin-bottom: 0;
+      color: var(--muted);
+    }
+
+    .analysis-box {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      background: color-mix(in srgb, var(--panel) 78%, var(--panel-soft));
+    }
+
+    .analysis-box span {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--accent);
+      font-weight: 900;
+    }
+
+    .mobile-panel {
+      position: sticky;
+      bottom: 10px;
+      z-index: 5;
+      margin-top: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      background: color-mix(in srgb, var(--panel) 94%, transparent);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+    }
+
+    .panel-buttons {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .panel-buttons button {
+      min-height: 40px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel-soft);
+      color: var(--ink);
+      font-weight: 900;
+    }
+
+    .panel-buttons button:last-child {
+      border-color: transparent;
+      background: var(--accent);
+      color: #fff;
+    }
+
+    body.dark .panel-buttons button:last-child { color: #102024; }
+    .panel-buttons button:disabled { opacity: .45; }
+
+    .panel-stats {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: .88rem;
+    }
+
+    @media (min-width: 761px) {
+      .mobile-shell { max-width: 520px; margin: 0 auto; }
+    }
+  </style>
+</head>
+<body>
+  <div class="mobile-shell">
+    <header class="mobile-top">
+      <div class="brand-row">
+        <div>
+          <p class="eyebrow">手机版 · 滑动刷题</p>
+          <h1>练习 1-5 自学题库</h1>
+        </div>
+        <a class="desktop-link" href="./index.html?desktop=1">电脑版</a>
+      </div>
+      <div class="progress-text"><b id="progressText">第 1 / 1 题</b><span id="sectionText">判断题</span></div>
+      <div class="bar"><i id="barFill"></i></div>
+    </header>
+
+    <main class="stage" id="stage" aria-live="polite"></main>
+  </div>
+
+  <script type="application/json" id="question-data">[{"id":1,"type":"判断题","section":"判断题","text":"等级相关系数法检验异方差时，计算的是残差和某个自变量的等级相关系数。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["B"],"knowledge":"异方差的诊断","sourcePage":1,"needsReview":false},{"id":2,"type":"判断题","section":"判断题","text":"多元加权最小二乘估法进行权函数确定时，计算每个自变量与普通残差的等级相关系数，选取等级相关系数 最小的自变量构造权函数。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["B"],"knowledge":"","sourcePage":1,"needsReview":false},{"id":3,"type":"判断题","section":"判断题","text":"序列相关(自相关性)存在时，容易导致对t值评价过低，常用的F检验和t检验失效。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["B"],"knowledge":"","sourcePage":1,"needsReview":false},{"id":4,"type":"判断题","section":"判断题","text":"当存在异方差时，普通最小二乘估计虽是有偏的，但不是最小方差的。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["B"],"knowledge":"违背基本假设的几种情况 / 异方差带来的影响","sourcePage":1,"needsReview":false},{"id":5,"type":"判断题","section":"判断题","text":"残差图中的点随机分布，则表明模型存在自相关。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["B"],"knowledge":"","sourcePage":1,"needsReview":false,"analysis":"错。残差图随机分布通常说明没有明显系统性模式，不能据此说模型存在自相关。"},{"id":6,"type":"判断题","section":"判断题","text":"异方差仅影响T检验，不影响F检验。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["B"],"knowledge":"","sourcePage":2,"needsReview":false},{"id":7,"type":"判断题","section":"判断题","text":"库克距离的大小可用以判断是否为异常值点。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["A"],"knowledge":"","sourcePage":2,"needsReview":false},{"id":8,"type":"判断题","section":"判断题","text":"时间序列数据易产生模型中随机误差项的序列相关。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["A"],"knowledge":"","sourcePage":2,"needsReview":false},{"id":9,"type":"判断题","section":"判断题","text":"异方差性是指回归模型中随机误差项的方差不相等。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["A"],"knowledge":"","sourcePage":2,"needsReview":false},{"id":10,"type":"判断题","section":"判断题","text":"回归模型中，自变量只能是定量变量，不能包含定性变量。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["B"],"knowledge":"","sourcePage":2,"needsReview":false},{"id":11,"type":"判断题","section":"判断题","text":"学生化残差可解决方差不等问题。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["A"],"knowledge":"","sourcePage":2,"needsReview":false,"analysis":"对。学生化残差把残差按其标准误标准化，常用于识别方差不等、异常点等问题。"},{"id":12,"type":"判断题","section":"判断题","text":"异方差和自相关问题可同时处理，无需逐一检验。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["B"],"knowledge":"异方差问题 / 自相关问题及其诊断","sourcePage":3,"needsReview":false,"knowledgeKey":"serial","analysis":"错在“无需逐一检验”。异方差看误差方差是否随观测变化，序列相关看不同时期误差是否相关；二者可能同时存在，但诊断和修正方法不同。"},{"id":13,"type":"判断题","section":"判断题","text":"单值预测是用单个值作为因变量新值的预测值。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["A"],"knowledge":"","sourcePage":3,"needsReview":false},{"id":14,"type":"判断题","section":"判断题","text":"变量间的统计关系是一种非确定性关系，由一个或一些变量不可以唯一确定另外一个变量。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["A"],"knowledge":"","sourcePage":3,"needsReview":false},{"id":15,"type":"判断题","section":"判断题","text":"当存在异方差时，普通最小二乘估计的参数估计值不是最小方差线性无偏估计。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["A"],"knowledge":"异方差带来的影响 / 违背基本假设的几种情况","sourcePage":3,"needsReview":false},{"id":16,"type":"判断题","section":"判断题","text":"DW检验法主要用于检验一阶自相关。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["A"],"knowledge":"","sourcePage":3,"needsReview":false},{"id":17,"type":"判断题","section":"判断题","text":"异方差会导致最小二乘估计量不再无偏。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["B"],"knowledge":"异方差带来的影响","sourcePage":3,"needsReview":false},{"id":18,"type":"判断题","section":"判断题","text":"模型基本假设中，随机误差项e的方差Var(e与自变量取值有关。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["B"],"knowledge":"","sourcePage":4,"needsReview":false},{"id":19,"type":"判断题","section":"判断题","text":"残差图分析法足以完全排除异方差的可能性。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["B"],"knowledge":"异方差的诊断","sourcePage":4,"needsReview":false},{"id":20,"type":"判断题","section":"判断题","text":"因变量y在回归模型中被称为被解释变量，自变量为解释变量，两者关系是对等的。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["B"],"knowledge":"","sourcePage":4,"needsReview":false},{"id":21,"type":"判断题","section":"判断题","text":"处理异方差后，自相关问题有可能会得到改善。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["A"],"knowledge":"自相关问题 / 异方差问题","sourcePage":4,"needsReview":false},{"id":22,"type":"判断题","section":"判断题","text":"残差图中的点随机分布，则表明模型存在自相关。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["B"],"knowledge":"自相关问题及其诊断","sourcePage":4,"needsReview":false},{"id":23,"type":"判断题","section":"判断题","text":"经济变量的滞后性可能会给序列带来自相关性。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["A"],"knowledge":"","sourcePage":5,"needsReview":false},{"id":24,"type":"判断题","section":"判断题","text":"回归模型中，随机误差项 \\(\\varepsilon\\) 仅包含样本数据的观测误差。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["B"],"knowledge":"","sourcePage":5,"needsReview":false,"analysis":"错。随机误差项还包括遗漏因素、模型设定误差等，不只是观测误差。"},{"id":25,"type":"判断题","section":"判断题","text":"异方差会导致最小二乘估计量不再无偏。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["B"],"knowledge":"","sourcePage":5,"needsReview":false},{"id":26,"type":"判断题","section":"判断题","text":"遗漏关键变量时会产生序列的自相关性。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["A"],"knowledge":"","sourcePage":5,"needsReview":false},{"id":27,"type":"判断题","section":"判断题","text":"残差图分析法中，若残差随自变量增大而呈现规律性波动，则可能存在异方差。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["A"],"knowledge":"","sourcePage":5,"needsReview":false},{"id":28,"type":"判断题","section":"判断题","text":"残差图分析法足以完全排除异方差的可能性。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["B"],"knowledge":"","sourcePage":5,"needsReview":false},{"id":29,"type":"判断题","section":"判断题","text":"自相关是指回归模型中误差项之间存在相关性，也称为序列相关。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["A"],"knowledge":"自相关 / 序列相关","sourcePage":5,"needsReview":false,"knowledgeKey":"serial","analysis":"这一定义正确。自相关就是不同观测期误差项相关，例如 \\(Cov(u_t,u_s)\\ne0\\)，在时间序列里也常叫序列相关。"},{"id":30,"type":"判断题","section":"判断题","text":"回归模型中的函数f(x1.×p)必须是线性函数。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["B"],"knowledge":"","sourcePage":6,"needsReview":false},{"id":31,"type":"判断题","section":"判断题","text":"残差图中的点随机分布，则表明模型存在异方差。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["B"],"knowledge":"","sourcePage":6,"needsReview":false},{"id":32,"type":"判断题","section":"判断题","text":"序列相关(自相关性)存在时，普通最小二乘估计量对抽样波动非常敏感。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["B"],"knowledge":"","sourcePage":6,"needsReview":false},{"id":33,"type":"判断题","section":"判断题","text":"数据修匀处理时，不恰当的差分变换也可能会带来序列的自相关性。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["A"],"knowledge":"","sourcePage":6,"needsReview":false},{"id":34,"type":"判断题","section":"判断题","text":"异方差会导致参数估计量的方差增大，影响统计推断。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["A"],"knowledge":"异方差的诊断","sourcePage":6,"needsReview":false},{"id":35,"type":"判断题","section":"判断题","text":"序列相关(自相关性)存在时，普通最小二乘估计得到的参数估计值，在任一特定的样本中，可能严重歪曲真值 的真实情况。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["A"],"knowledge":"","sourcePage":6,"needsReview":false,"analysis":"对。存在序列相关时，OLS 在特定样本中可能明显偏离真实关系，常规推断也会不可靠。"},{"id":36,"type":"判断题","section":"判断题","text":"DW检验是异方差检验的常用方法之一。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["B"],"knowledge":"DW检验 / 异方差检验","sourcePage":7,"needsReview":false,"knowledgeKey":"dw","analysis":"错。DW检验主要用于检验一阶自相关，不是异方差检验。异方差常用残差图、等级相关、White检验等方法。"},{"id":37,"type":"判断题","section":"判断题","text":"自相关是指回归模型中误差项之间存在相关性，也称为序列相关。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["A"],"knowledge":"自相关问题及其处理","sourcePage":7,"needsReview":false},{"id":38,"type":"判断题","section":"判断题","text":"异方差会导致参数估计量的方差增大，影响统计推断。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["A"],"knowledge":"","sourcePage":7,"needsReview":false},{"id":39,"type":"判断题","section":"判断题","text":"当存在异方差时，普通最小二乘估计的参数估计值是无偏的。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["A"],"knowledge":"异方差带来的影响 / 违背基本假设的几种情况","sourcePage":7,"needsReview":false},{"id":40,"type":"判断题","section":"判断题","text":"DW检验只适合一阶序列相关情形。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["A"],"knowledge":"DW检验 / 一阶序列相关","sourcePage":7,"needsReview":false,"knowledgeKey":"dw","analysis":"对。DW统计量主要针对一阶序列相关，高阶相关不能只靠DW检验判断。"},{"id":41,"type":"判断题","section":"判断题","text":"残差图的横坐标只能是自变量。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["B"],"knowledge":"残差分析","sourcePage":8,"needsReview":false},{"id":42,"type":"判断题","section":"判断题","text":"自相关问题中误差项的协方差为0。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["B"],"knowledge":"自相关问题及其诊断","sourcePage":8,"needsReview":false},{"id":43,"type":"判断题","section":"判断题","text":"残差图的横坐标只能是自变量。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["B"],"knowledge":"","sourcePage":8,"needsReview":false},{"id":44,"type":"判断题","section":"判断题","text":"序列相关(自相关性)存在时，容易导致对t值评价过高，常用的F检验和t检验失效。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["A"],"knowledge":"","sourcePage":8,"needsReview":false},{"id":45,"type":"判断题","section":"判断题","text":"对因变量的区间预测分为因变量新值的区间预测和因变量新值的平均值的区间预测。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["A"],"knowledge":"","sourcePage":8,"needsReview":false,"analysis":"对。区间预测既可以预测单个新观测值，也可以预测给定解释变量下因变量平均值的区间。"},{"id":46,"type":"判断题","section":"判断题","text":"DW检验不适合随机项具有高阶序列相关的情形。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["A"],"knowledge":"DW检验 / 高阶序列相关","sourcePage":8,"needsReview":false,"knowledgeKey":"dw","analysis":"这句话正确。DW检验主要针对一阶自相关，近似检查 \\(u_t=\\rho u_{t-1}+v_t\\)；二阶、三阶等高阶相关不适合只用DW判断。"},{"id":47,"type":"判断题","section":"判断题","text":"处理异方差后，自相关问题有可能会得到改善。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["A"],"knowledge":"","sourcePage":9,"needsReview":false},{"id":48,"type":"判断题","section":"判断题","text":"多元线性回归中，F检验是用来检验模型中每一个自变量对y的影响是否显著。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["B"],"knowledge":"","sourcePage":9,"needsReview":false},{"id":49,"type":"判断题","section":"判断题","text":"变量间的函数关系是一种确定性的关系，即由一个或一些变量可以唯一确定另外一个变量。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["A"],"knowledge":"","sourcePage":9,"needsReview":false},{"id":50,"type":"判断题","section":"判断题","text":"截面数据作样本时，易产生异方差性。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["A"],"knowledge":"违背基本假设的几种情况 / 异方差性产生的背景和原因","sourcePage":9,"needsReview":false},{"id":51,"type":"判断题","section":"判断题","text":"序列相关(自相关性)存在时，不会影响常用的F检验和t检验。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["B"],"knowledge":"","sourcePage":9,"needsReview":false},{"id":52,"type":"判断题","section":"判断题","text":"异方差仅影响T检验，不影响F检验。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["B"],"knowledge":"异方差带来的影响","sourcePage":9,"needsReview":false,"analysis":"错。异方差会影响标准误估计，因此t检验和F检验都可能受影响。"},{"id":53,"type":"判断题","section":"判断题","text":"变量间的统计关系是一种确定性的关系，即由一个或一些变量可以唯一确定另外一个变量。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["B"],"knowledge":"","sourcePage":10,"needsReview":false},{"id":54,"type":"判断题","section":"判断题","text":"异方差性是指回归模型中随机误差项的方差不相等。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["A"],"knowledge":"异方差性产生的背景和原因","sourcePage":10,"needsReview":false},{"id":55,"type":"判断题","section":"判断题","text":"序列相关(自相关性)存在时，均方误差可能严重低估误差项的方差性。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["A"],"knowledge":"","sourcePage":10,"needsReview":false},{"id":56,"type":"判断题","section":"判断题","text":"模型中的解释变量越多，说明该模型越准确，越能表明变量间的关系。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["B"],"knowledge":"","sourcePage":10,"needsReview":false},{"id":57,"type":"判断题","section":"判断题","text":"等级相关系数法检验异方差时，计算的是残差和某个自变量的等级相关系数。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["B"],"knowledge":"","sourcePage":10,"needsReview":false},{"id":58,"type":"判断题","section":"判断题","text":"回归分析中，因变量处在被解释的特殊地位，而相关分析中，变量之间是平等的地位。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["A"],"knowledge":"回归分析与相关分析的区别","sourcePage":10,"needsReview":false,"knowledgeKey":"regressionCorrelation","analysis":"这句话正确。回归分析要区分被解释变量 \\(y\\) 和解释变量 \\(x\\)；相关分析只看变量一起变化的程度，不预设谁解释谁。"},{"id":59,"type":"判断题","section":"判断题","text":"采用错误的回归函数形式可能引起自相关性。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["A"],"knowledge":"","sourcePage":11,"needsReview":false},{"id":60,"type":"判断题","section":"判断题","text":"残差图中的点随机分布，则表明模型存在异方差。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["B"],"knowledge":"异方差的诊断","sourcePage":11,"needsReview":false},{"id":61,"type":"判断题","section":"判断题","text":"异方差会导致最小二乘估计量不再具有最小方差性。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["A"],"knowledge":"异方差问题","sourcePage":11,"needsReview":false},{"id":62,"type":"判断题","section":"判断题","text":"回归分析中为便于数学上的处理，一般要求n>p.","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["A"],"knowledge":"","sourcePage":11,"needsReview":false},{"id":63,"type":"判断题","section":"判断题","text":"DW检验法主要用于检验一阶自相关。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["A"],"knowledge":"DW检验 / 一阶自相关","sourcePage":11,"needsReview":false,"knowledgeKey":"dw","analysis":"这句话正确。DW统计量比较相邻残差 \\(e_t\\) 和 \\(e_{t-1}\\)，所以主要检验一阶自相关。"},{"id":64,"type":"判断题","section":"判断题","text":"回归分析中的误差项，可以为随机变量，也可以为确定性变量。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["B"],"knowledge":"","sourcePage":12,"needsReview":false},{"id":65,"type":"判断题","section":"判断题","text":"当存在异方差时，普通最小二乘估计的参数的显著性检验失效。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["A"],"knowledge":"违背基本假设的几种情况 / 异方差带来的影响","sourcePage":12,"needsReview":false},{"id":66,"type":"判断题","section":"判断题","text":"回归模型的一般形式为y=f(x1Xp)+E，其中f是确定性函数。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["A"],"knowledge":"","sourcePage":12,"needsReview":false},{"id":67,"type":"判断题","section":"判断题","text":"蛛网现象可能带来异方差性。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["B"],"knowledge":"","sourcePage":12,"needsReview":false},{"id":68,"type":"判断题","section":"判断题","text":"蛛网现象可能带来序列的自相关性。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["A"],"knowledge":"","sourcePage":12,"needsReview":false},{"id":69,"type":"判断题","section":"判断题","text":"自相关问题中误差项的协方差为0。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["B"],"knowledge":"","sourcePage":12,"needsReview":false,"analysis":"错。自相关问题正是指不同时期误差项协方差不为0；协方差为0才是不自相关。"},{"id":70,"type":"判断题","section":"判断题","text":"序列相关(自相关性)存在时，普通最小二乘估计的参数估计值不再具有最小方差线性无偏性。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["A"],"knowledge":"","sourcePage":13,"needsReview":false},{"id":71,"type":"判断题","section":"判断题","text":"异方差会导致最小二乘估计量不再具有最小方差性。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["A"],"knowledge":"","sourcePage":13,"needsReview":false},{"id":72,"type":"判断题","section":"判断题","text":"异方差和自相关问题可同时处理，无需逐一检验。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["B"],"knowledge":"","sourcePage":13,"needsReview":false},{"id":73,"type":"判断题","section":"判断题","text":"多元线性回归模型中，因变量与多个自变量之间是线性关系。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["A"],"knowledge":"","sourcePage":13,"needsReview":false},{"id":74,"type":"判断题","section":"判断题","text":"残差图分析法中，若残差随自变量增大而呈现规律性波动，则可能存在异方差。","options":[{"key":"A","label":"对"},{"key":"B","label":"错"}],"answer":["A"],"knowledge":"异方差的诊断 / 二.多选题(共6题，4.8分)","sourcePage":13,"needsReview":false},{"id":75,"type":"多选题","section":"多选题","text":"以下变换属于BOX-COX变换的特例的是（）。","options":[{"key":"A","label":"平方根变换"},{"key":"B","label":"对数变换"},{"key":"C","label":"倒数变换"},{"key":"D","label":"指数变换"}],"answer":["A","B","C"],"knowledge":"BOX-COX变换","sourcePage":13,"needsReview":false,"analysis":"Box-Cox通过不同的 \\(\\lambda\\) 取值可得到平方根、对数、倒数等常见变换；指数变换不是它的常见特例。"},{"id":76,"type":"多选题","section":"多选题","text":"消除异方差的方法通常有:()","options":[{"key":"A","label":"差分法"},{"key":"B","label":"迭代法"},{"key":"C","label":"加权最小二乘法"},{"key":"D","label":"BOX-COX变换法"}],"answer":["C","D"],"knowledge":"","sourcePage":14,"needsReview":false},{"id":77,"type":"多选题","section":"多选题","text":"异方差的诊断常用方法用()","options":[{"key":"A","label":"自相关系数法"},{"key":"B","label":"DW检验"},{"key":"C","label":"残差图分析法"},{"key":"D","label":"等级相关系数法"}],"answer":["C","D"],"knowledge":"","sourcePage":14,"needsReview":false},{"id":78,"type":"多选题","section":"多选题","text":"BOX-COX变换可以处理以下哪些情况()","options":[{"key":"A","label":"自相关"},{"key":"B","label":"回归函数非线性"},{"key":"C","label":"异方差"},{"key":"D","label":"误差非正态"}],"answer":["A","B","C","D"],"knowledge":"","sourcePage":14,"needsReview":false},{"id":79,"type":"多选题","section":"多选题","text":"下列说法正确的有()","options":[{"key":"A","label":"对一元线性回归，回归系数的t检验、回归方程的F检验、相关系数的显著性检验结果是完全一致的"},{"key":"B","label":"P值越小越好"},{"key":"C","label":"总离差平方和中回归平方和所占比重越大，则线性回归效果越好"},{"key":"D","label":"P值是在原假设成立的情况下，所得到的样本观察结果或更极端结果出现的概率"}],"answer":["A","C","D"],"knowledge":"","sourcePage":14,"needsReview":false},{"id":80,"type":"多选题","section":"多选题","text":"最小二乘估计得到的估计量具有以下哪些性质？（）","options":[{"key":"A","label":"线性性"},{"key":"B","label":"有偏性"},{"key":"C","label":"无偏性"},{"key":"D","label":"有效性"}],"answer":["A","C","D"],"knowledge":"OLS估计量性质","sourcePage":14,"needsReview":false,"knowledgeKey":"blue","analysis":"经典假设下，OLS估计量具有线性、无偏、有效这些性质；“有偏性”不是它的性质。"},{"id":81,"type":"单选题","section":"单选题","text":"在回归分析中，残差平方和越大，说明变量之间()","options":[{"key":"A","label":"回归方程拟合效果越好"},{"key":"B","label":"相关程度越高"},{"key":"C","label":"因变量变化中由自变量变化而引起的比重越大"},{"key":"D","label":"相关程度越低"}],"answer":["D"],"knowledge":"","sourcePage":15,"needsReview":false},{"id":82,"type":"单选题","section":"单选题","text":"在由n=30的一组样本估计的、包含3个解释变量的线性回归模型中，计算得可决系数为0.85,则调整后的可 决系数为()","options":[{"key":"A","label":"0.8389"},{"key":"B","label":"0.8655"},{"key":"C","label":"0.8603"},{"key":"D","label":"0.8327"}],"answer":["D"],"knowledge":"","sourcePage":15,"needsReview":false},{"id":83,"type":"单选题","section":"单选题","text":"一位母亲记录了儿子3~9岁的身高，由此建立的身高与年龄的回归直线方程为=7.19x+73.93,据此可以预 测这个孩子10岁时的身高，则正确的叙述是()","options":[{"key":"A","label":"身高低于145.00cm"},{"key":"B","label":"身高超过146.00cm"},{"key":"C","label":"身高一定是145.83cm"},{"key":"D","label":"身高在145.83cm左右"}],"answer":["D"],"knowledge":"","sourcePage":15,"needsReview":false},{"id":84,"type":"单选题","section":"单选题","text":"下列哪种方法不是检验序列相关有效的方法？()","options":[{"key":"A","label":"自相关系数法"},{"key":"B","label":"残差图分析法"},{"key":"C","label":"方差扩大因子法"},{"key":"D","label":"DW检验"}],"answer":["C"],"knowledge":"","sourcePage":15,"needsReview":false},{"id":85,"type":"单选题","section":"单选题","text":"当模型存在异方差时，使用普通最小二乘法得到的估计量是（）。","options":[{"key":"A","label":"渐进估计量"},{"key":"B","label":"无偏估计量"},{"key":"C","label":"有偏估计量"},{"key":"D","label":"有效估计量"}],"answer":["B"],"knowledge":"异方差下 OLS 的性质","sourcePage":15,"needsReview":false,"knowledgeKey":"ols","analysis":"异方差不等于有偏。只要仍满足 \\(E(u_i\\mid X_i)=0\\)，OLS 仍是无偏估计量；但异方差破坏同方差条件，OLS通常不再是有效估计量。"},{"id":86,"type":"单选题","section":"单选题","text":"当DW=4时，说明()","options":[{"key":"A","label":"存在完全负的一阶自相关"},{"key":"B","label":"不能判断"},{"key":"C","label":"存在完全的正的一阶自相关"},{"key":"D","label":"不存在序列相关"}],"answer":["A"],"knowledge":"","sourcePage":16,"needsReview":false},{"id":87,"type":"单选题","section":"单选题","text":"在检验异方差中，不正确的是()","options":[{"key":"A","label":"White检验法"},{"key":"B","label":"DW检验"},{"key":"C","label":"ARCH检验法"},{"key":"D","label":"Goldfeld-Quandt方法"}],"answer":["B"],"knowledge":"","sourcePage":16,"needsReview":false},{"id":88,"type":"单选题","section":"单选题","text":"采用一阶差分法估计一阶自相关模型，适合于（）。","options":[{"key":"A","label":"\\(-1<\\rho<0\\)"},{"key":"B","label":"\\(\\rho=0\\)"},{"key":"C","label":"\\(0<\\rho<1\\)"},{"key":"D","label":"\\(\\rho=1\\)"}],"answer":["D"],"knowledge":"一阶差分法 / 一阶自相关","sourcePage":16,"needsReview":false,"knowledgeKey":"serial","analysis":"一阶差分法相当于按 \\(\\rho=1\\) 的情形处理自相关，所以本题选D。"},{"id":89,"type":"单选题","section":"单选题","text":"调整的可决系数 \\(\\bar R^2\\) 与多元样本判定系数 \\(R^2\\) 之间有如下关系（）。","options":[{"key":"A","label":"\\(\\bar R^2=\\frac{n-1}{n-k-1}R^2\\)"},{"key":"B","label":"\\(\\bar R^2=1-\\frac{n-1}{n-k-1}(1-R^2)\\)"},{"key":"C","label":"\\(\\bar R^2=\\frac{n-1}{n-k-1}(1+R^2)\\)"},{"key":"D","label":"\\(\\bar R^2=1-\\frac{n-1}{n-k-1}R^2\\)"}],"answer":["B"],"knowledge":"调整的可决系数","sourcePage":16,"needsReview":false,"knowledgeKey":"r2","analysis":"调整 \\(R^2\\) 会惩罚解释变量个数，公式是 \\(\\bar R^2=1-\\frac{n-1}{n-k-1}(1-R^2)\\)。"},{"id":90,"type":"单选题","section":"单选题","text":"下列哪种不是检验序列是否存在自相关的方法（）。","options":[{"key":"A","label":"残差分析法"},{"key":"B","label":"DW检验法"},{"key":"C","label":"自相关系数法"},{"key":"D","label":"方差扩大因子法"}],"answer":["D"],"knowledge":"自相关检验方法 / 方差扩大因子","sourcePage":17,"needsReview":false,"knowledgeKey":"serial","analysis":"A、B、C都可以用来检查自相关；D中的方差扩大因子 VIF 是检验多重共线性的，不是检验序列自相关。"},{"id":91,"type":"单选题","section":"单选题","text":"已知直线回归方程为y=2-1.5x,则变量x增加一个单位时()","options":[{"key":"A","label":"y平均减少2个单位"},{"key":"B","label":"y平均增加1.5个单位"},{"key":"C","label":"y平均增加2个单位"},{"key":"D","label":"y平均减少1.5个单位"}],"answer":["D"],"knowledge":"","sourcePage":17,"needsReview":false},{"id":92,"type":"单选题","section":"单选题","text":"异方差情形下，常用的估计方法是()","options":[{"key":"A","label":"广义差分法"},{"key":"B","label":"一阶差分法"},{"key":"C","label":"工具变量法"},{"key":"D","label":"加权最小二乘法"}],"answer":["D"],"knowledge":"","sourcePage":17,"needsReview":false},{"id":93,"type":"单选题","section":"单选题","text":"回归模型的被解释变量一定是()","options":[{"key":"A","label":"内生变量"},{"key":"B","label":"政策变量"},{"key":"C","label":"外生变量"},{"key":"D","label":"控制变量"}],"answer":["A"],"knowledge":"","sourcePage":17,"needsReview":false},{"id":94,"type":"单选题","section":"单选题","text":"线性回归中普通最小二乘估计的缺点是()","options":[{"key":"A","label":"回归直线被拉向方差大的项；"},{"key":"B","label":"是有偏估计"},{"key":"C","label":"回归直线被拉向方差小的项；"},{"key":"D","label":"方差大的项在平方和中所起的作用小；"}],"answer":["A"],"knowledge":"","sourcePage":17,"needsReview":false},{"id":95,"type":"单选题","section":"单选题","text":"DW检验的零假设是(p为随机误差项的一阶相关系数)()","options":[{"key":"A","label":"DW=0"},{"key":"B","label":"p=0"},{"key":"C","label":"p=1"},{"key":"D","label":"DW=1"}],"answer":["B"],"knowledge":"","sourcePage":18,"needsReview":false},{"id":96,"type":"单选题","section":"单选题","text":"在具体运用加权最小二乘法时，如果变换的结果是 \\(\\frac{y}{x}=\\beta_0\\frac{1}{x}+\\beta_1\\frac{x}{x}+\\frac{u}{x}\\)，则 \\(Var(u)\\) 是下列形式中的哪一种（）。","options":[{"key":"A","label":"\\(\\sigma^2\\sqrt{x}\\)"},{"key":"B","label":"\\(\\sigma^2x^2\\)"},{"key":"C","label":"\\(\\sigma^2x\\)"},{"key":"D","label":"\\(\\sigma^2\\log x\\)"}],"answer":["B"],"knowledge":"加权最小二乘法 / 变换后误差方差","sourcePage":18,"needsReview":false,"knowledgeKey":"wlsTransform","analysis":"变换后误差项是 \\(u/x\\)。若变换后要同方差，就要 \\(Var(u/x)=\\sigma^2\\)。因为 \\(Var(u/x)=Var(u)/x^2\\)，所以 \\(Var(u)=\\sigma^2x^2\\)，选B。"},{"id":97,"type":"单选题","section":"单选题","text":"在异方差的情况下，常用的估计方法是()","options":[{"key":"A","label":"加权最小二乘法"},{"key":"B","label":"广义差分法"},{"key":"C","label":"一阶差分法"},{"key":"D","label":"工具变量法"}],"answer":["A"],"knowledge":"","sourcePage":18,"needsReview":false},{"id":98,"type":"单选题","section":"单选题","text":"下列选项哪个是用来检验模型是否存在异方差问题的？","options":[{"key":"A","label":"等级相关系数"},{"key":"B","label":"方差扩大因子VIF"},{"key":"C","label":"DW检验"},{"key":"D","label":"连贯检验"}],"answer":["A"],"knowledge":"","sourcePage":18,"needsReview":false},{"id":99,"type":"单选题","section":"单选题","text":"在回归分析中，有关被解释变量 (Y) 和解释变量 (X) 的说法正确的是（）。","options":[{"key":"A","label":"\\(Y\\) 为随机变量，\\(X\\) 为非随机变量"},{"key":"B","label":"\\(X,Y\\) 均为随机变量"},{"key":"C","label":"\\(X\\) 为随机变量，\\(Y\\) 为非随机变量"},{"key":"D","label":"\\(X,Y\\) 均为非随机变量"}],"answer":["A"],"knowledge":"回归分析变量设定","sourcePage":18,"needsReview":false,"knowledgeKey":"regressionCorrelation","analysis":"经典回归分析通常把解释变量 \\(X\\) 视为给定或非随机，被解释变量 \\(Y\\) 随随机误差项变化，所以选A。"},{"id":100,"type":"单选题","section":"单选题","text":"若计算的DW的统计量为2,则表明该模型()","options":[{"key":"A","label":"存在高阶相关"},{"key":"B","label":"存在一阶正序列相关"},{"key":"C","label":"存在一阶负序列相关"},{"key":"D","label":"不存在一阶序列相关"}],"answer":["D"],"knowledge":"","sourcePage":19,"needsReview":false},{"id":101,"type":"单选题","section":"单选题","text":"关于异常值，下述说法中，不正确的是（）。","options":[{"key":"A","label":"若某个观测点的学生化残差的绝对值较大，则可能是异常值"},{"key":"B","label":"异常值是指数据的极端的观测值，可能来自其它数据或模型"},{"key":"C","label":"自变量和因变量都会影响残差，也都会影响杠杆值"}],"answer":["C"],"knowledge":"异常值 / 杠杆值 / 学生化残差","sourcePage":19,"needsReview":false,"analysis":"C错。残差主要和因变量方向的偏离有关；杠杆值只由解释变量 \\(X\\) 的位置决定，不由因变量 \\(Y\\) 决定。"},{"id":102,"type":"单选题","section":"单选题","text":"关于可决系数 \\(R^2\\)，以下说法中错误的是（）。","options":[{"key":"A","label":"可决系数 \\(R^2\\) 反映了样本回归线对样本观测值拟合优劣程度的一种描述"},{"key":"B","label":"可决系数 \\(R^2\\) 的定义为回归方程已经解释的变差与总变差之比"},{"key":"C","label":"\\(R^2\\in[0,1]\\)"},{"key":"D","label":"可决系数 \\(R^2\\) 的大小不受到回归模型中所包含的解释变量个数的影响"}],"answer":["D"],"knowledge":"可决系数R²","sourcePage":19,"needsReview":false,"knowledgeKey":"r2","analysis":"D错。普通 \\(R^2\\) 通常会随解释变量增加而不下降，因此它会受到解释变量个数影响；调整 \\(R^2\\) 才会惩罚变量个数。"},{"id":103,"type":"单选题","section":"单选题","text":"在异方差的情况下，参数估计的方差不能正确估计的原因是（）。","options":[{"key":"A","label":"\\(E(u_i u_j)\\ne0 (i\\ne j)\\)"},{"key":"B","label":"\\(E(u_i)\\ne0\\)"},{"key":"C","label":"\\(E(u_i^2)\\ne\\sigma^2\\)"},{"key":"D","label":"\\(E(x_i u_i)\\ne0\\)"}],"answer":["C"],"knowledge":"异方差 / 误差方差","sourcePage":19,"needsReview":false,"knowledgeKey":"hetero","analysis":"异方差的关键是误差项方差不是同一个常数，即 \\(E(u_i^2)\\ne\\sigma^2\\)，所以常规方差和标准误会估错。"},{"id":104,"type":"单选题","section":"单选题","text":"多元线性回归分析中的ESS反映了（）。","options":[{"key":"A","label":"因变量回归估计值总变差的大小"},{"key":"B","label":"因变量观测值总变差的大小"},{"key":"C","label":"因变量观测值与估计值之间的总变差"},{"key":"D","label":"\\(Y\\) 关于 \\(X\\) 的边际变化"}],"answer":["C"],"knowledge":"ESS / 残差平方和","sourcePage":19,"needsReview":false,"knowledgeKey":"sse","analysis":"本题中的ESS指误差平方和，反映观测值与估计值之间没有被模型解释掉的总变差。"},{"id":105,"type":"单选题","section":"单选题","text":"最小二乘准则是指（）。","options":[{"key":"A","label":"\\(X\\) 与它均值 \\(E(X)\\) 的离差的平方和最小"},{"key":"B","label":"误差项的平方和最小"},{"key":"C","label":"随机误差项 \\(\\varepsilon\\) 的平方和最小"},{"key":"D","label":"\\(Y\\) 与它的期望值 \\(E(Y\\mid X)\\) 的离差平方和最小"},{"key":"E","label":"残差的平方和最小"}],"answer":["E"],"knowledge":"最小二乘准则 / 残差平方和","sourcePage":20,"needsReview":false,"knowledgeKey":"sse","analysis":"最小二乘法最小化的是样本残差平方和 \\(\\sum e_i^2\\)，不是不可观测的随机误差项平方和。"},{"id":106,"type":"单选题","section":"单选题","text":"对模型 \\(Y_i=\\beta_0+\\beta_1X_{1i}+\\beta_2X_{2i}+\\mu_i\\) 进行总体显著性F检验，检验的零假设是（）。","options":[{"key":"A","label":"\\(\\beta_2=0\\)"},{"key":"B","label":"\\(\\beta_0=0\\) 或 \\(\\beta_1=0\\)"},{"key":"C","label":"\\(\\beta_1=0\\)"},{"key":"D","label":"\\(\\beta_1=\\beta_2=0\\)"}],"answer":["D"],"knowledge":"总体显著性F检验 / 原假设","sourcePage":20,"needsReview":false,"knowledgeKey":"ftest","analysis":"总体F检验检验所有斜率系数是否同时为0，不检验截距。这个模型有两个解释变量，所以原假设是 \\(H_0:\\beta_1=\\beta_2=0\\)。"},{"id":107,"type":"单选题","section":"单选题","text":"加权最小二乘法克服异方差的主要原理是通过赋予不同观测点以不同的权数从而提高估计精度，即()","options":[{"key":"A","label":"重视小误差的作用轻视大误差的作用"},{"key":"B","label":"轻视小误差和大误差的作用"},{"key":"C","label":"重视大误差的作用轻视小误差的作用"},{"key":"D","label":"重视小误差和大误差的作用"}],"answer":["A"],"knowledge":"","sourcePage":20,"needsReview":false},{"id":108,"type":"单选题","section":"单选题","text":"下列哪种方法不是检验异方差的方法()","options":[{"key":"A","label":"方差膨胀因子检验"},{"key":"B","label":"戈德菲尔特--匡特检验"},{"key":"C","label":"怀特检验"},{"key":"D","label":"戈里瑟检验 R²越小,残差平方和越小"}],"answer":["A"],"knowledge":"","sourcePage":20,"needsReview":false},{"id":109,"type":"单选题","section":"单选题","text":"因变量 \\(y\\) 与自变量 \\(x\\) 的回归模型中，通常用 \\(R^2\\) 来刻画回归的效果，则正确的叙述是（）。","options":[{"key":"A","label":"\\(R^2\\) 越小，残差平方和越小"},{"key":"B","label":"\\(R^2\\) 与残差平方和无关"},{"key":"C","label":"\\(R^2\\) 越大，残差平方和越大"},{"key":"D","label":"\\(R^2\\) 越小，残差平方和越大"}],"answer":["D"],"knowledge":"可决系数R² / 残差平方和","sourcePage":21,"needsReview":false,"knowledgeKey":"sse","analysis":"\\(R^2=1-SSE/SST\\)。同一个样本中 \\(SST\\) 固定，\\(R^2\\) 越小表示 \\(SSE\\) 越大，也就是残差平方和越大。"},{"id":110,"type":"单选题","section":"单选题","text":"更容易产生异方差的数据为()","options":[{"key":"A","label":"时序数列"},{"key":"B","label":"横截面数据"},{"key":"C","label":"年度数据"},{"key":"D","label":"修匀数据"}],"answer":["B"],"knowledge":"","sourcePage":21,"needsReview":false},{"id":111,"type":"单选题","section":"单选题","text":"DW的取值范围()","options":[{"key":"A","label":"-1≤DW≤1"},{"key":"B","label":"-1≤DW≤0"},{"key":"C","label":"0≤DW≤4"},{"key":"D","label":"-2≤DW≤2"}],"answer":["C"],"knowledge":"","sourcePage":21,"needsReview":false},{"id":112,"type":"单选题","section":"单选题","text":"在画两个变最的散点图时，下面哪个叙述是正确的()","options":[{"key":"A","label":"可以选择两个变量中任意一个变量在x轴上"},{"key":"B","label":"预报变最在x轴上,解释变量在y轴上"},{"key":"C","label":"解释变量在x轴上,预报变量在y轴上"},{"key":"D","label":"可以选择两个变量中任意一个变量在y轴上"}],"answer":["C"],"knowledge":"","sourcePage":21,"needsReview":false},{"id":113,"type":"单选题","section":"单选题","text":"DW检验的原假设为()","options":[{"key":"A","label":"DW=0"},{"key":"B","label":"DW=1"},{"key":"C","label":"?=0"},{"key":"D","label":"?=1"}],"answer":["C"],"knowledge":"","sourcePage":21,"needsReview":false},{"id":114,"type":"单选题","section":"单选题","text":"DW值的取值范围为:()","options":[{"key":"A","label":"[-2,4]"},{"key":"B","label":"[-1,1]"},{"key":"C","label":"[0,4]"},{"key":"D","label":"[-4,4]"}],"answer":["C"],"knowledge":"","sourcePage":22,"needsReview":false},{"id":115,"type":"单选题","section":"单选题","text":"回归分析中简单回归指的是()","options":[{"key":"A","label":"变量之间的线性回归"},{"key":"B","label":"两个变量之间的回归"},{"key":"C","label":"三个以上变量的回归"},{"key":"D","label":"两个变量之间的线性回归"}],"answer":["B"],"knowledge":"","sourcePage":22,"needsReview":false},{"id":116,"type":"单选题","section":"单选题","text":"在多元线性回归模型中，若某个解释变量对其余解释变量的判定系数接近1则表明模型中存在()","options":[{"key":"A","label":"多重共线性"},{"key":"B","label":"设定误差"},{"key":"C","label":"自相关"},{"key":"D","label":"异方差"}],"answer":["A"],"knowledge":"","sourcePage":22,"needsReview":false},{"id":117,"type":"单选题","section":"单选题","text":"总体回归线是指()","options":[{"key":"A","label":"解释变量×取给定值时，被解释变量Y的样本均值的轨迹"},{"key":"B","label":"解释变量×取给定值时，被解释变量Y的条件均值或期望值的轨迹。"},{"key":"C","label":"使残差平方和最小的曲线"},{"key":"D","label":"样本观测值拟合的最好的曲线。"}],"answer":["A"],"knowledge":"","sourcePage":22,"needsReview":false},{"id":118,"type":"单选题","section":"单选题","text":"用一组有30个观测值的样本估计模型 \\(y_i=b_0+b_1x_1+b_2x_2+u_i\\) 后，在0.05的显著性水平上对 \\(b_1\\) 的显著性作t检验，则 \\(b_1\\) 显著地不等于零的条件是其统计量大于等于（）。","options":[{"key":"A","label":"\\(t_{0.05}(27)\\)"},{"key":"B","label":"\\(t_{0.05}(30)\\)"},{"key":"C","label":"\\(t_{0.025}(28)\\)"},{"key":"D","label":"\\(t_{0.025}(27)\\)"}],"answer":["D"],"knowledge":"t检验 / 双侧检验 / 自由度","sourcePage":22,"needsReview":false,"knowledgeKey":"ttest","analysis":"“不等于0”是双侧检验，显著性水平0.05要分到两端，所以用 \\(0.025\\)。模型有3个参数 \\(b_0,b_1,b_2\\)，自由度是 \\(30-3=27\\)，因此选 \\(t_{0.025}(27)\\)。"},{"id":119,"type":"单选题","section":"单选题","text":"根据20个观测值估计的一元线性回归模型的DW=2.3，在样本容量n=20,解释变量个数k=1(不包含常数项) 显著型水平C=0.05时,查得dL=1.201,dU=1.411,则可以判断该模型()","options":[{"key":"A","label":"不存在一阶自相关"},{"key":"B","label":"有负的一阶自相关"},{"key":"C","label":"有正的一阶自相关"},{"key":"D","label":"无法确定"}],"answer":["A"],"knowledge":"","sourcePage":23,"needsReview":false},{"id":120,"type":"单选题","section":"单选题","text":"下面关于BOX-COX变换说法正确的是（）。","options":[{"key":"A","label":"不能处理误差非正态"},{"key":"B","label":"不能消除异方差"},{"key":"C","label":"不能处理回归函数非线性"},{"key":"D","label":"不能处理自相关"}],"answer":["D"],"knowledge":"BOX-COX变换","sourcePage":23,"needsReview":false,"analysis":"Box-Cox常用于处理非正态、异方差或函数形式非线性，但不能直接解决序列自相关，所以D正确。"},{"id":121,"type":"单选题","section":"单选题","text":"标准化残差是()","options":[{"key":"A","label":"残差的标准差除以残差"},{"key":"B","label":"因变量的观测值除以残差"},{"key":"C","label":"自变量的实际值除以残差"},{"key":"D","label":"残差除以残差的标准差"}],"answer":["D"],"knowledge":"","sourcePage":23,"needsReview":false},{"id":122,"type":"单选题","section":"单选题","text":"以下可用来寻找最优子集的R函数是:)","options":[{"key":"A","label":"regsubsets()"},{"key":"B","label":"cor.test()"},{"key":"C","label":"dwtest()"},{"key":"D","label":"step()"}],"answer":["A"],"knowledge":"","sourcePage":23,"needsReview":false},{"id":123,"type":"单选题","section":"单选题","text":"估计的有效性是指（）。","options":[{"key":"A","label":"在所有线性无偏估计量中方差最小"},{"key":"B","label":"在所有线性无偏估计量中变异系数最大"},{"key":"C","label":"在所有线性无偏估计量中变异系数最小"},{"key":"D","label":"在所有线性无偏估计中方差最大"}],"answer":["A"],"knowledge":"估计量有效性 / BLUE","sourcePage":23,"needsReview":false,"knowledgeKey":"blue","analysis":"有效性比较的是估计量方差。在线性无偏估计量这一类里，方差最小的估计量叫有效估计量，所以选A。"},{"id":124,"type":"单选题","section":"单选题","text":"设 \\(k\\) 为回归模型中的参数个数，\\(n\\) 为样本容量。则对多元线性回归方程进行显著性检验时，所用的 \\(F\\) 统计量可表示为（）。","options":[{"key":"A","label":"\\(\\frac{ESS/(k-1)}{RSS/(n-k)}\\)"},{"key":"B","label":"\\(\\frac{ESS/k}{RSS/(n-k-1)}\\)"},{"key":"C","label":"\\(\\frac{ESS/(n-k-1)}{RSS/k}\\)"},{"key":"D","label":"\\(\\frac{ESS/(n-k)}{RSS/(k-1)}\\)"}],"answer":["A"],"knowledge":"F检验 / 总体显著性","sourcePage":24,"needsReview":false,"knowledgeKey":"ftest","analysis":"总体显著性F统计量等于“解释平方和的均方”除以“残差平方和的均方”，即 \\(F=\\frac{ESS/(k-1)}{RSS/(n-k)}\\)。"},{"id":125,"type":"单选题","section":"单选题","text":"用来计算杠杆值的R函数为:()","options":[{"key":"A","label":"cooks.distance()"},{"key":"B","label":"rstudent()"},{"key":"C","label":"boxcox()"},{"key":"D","label":"hatvalues()"}],"answer":["D"],"knowledge":"","sourcePage":24,"needsReview":false},{"id":126,"type":"单选题","section":"单选题","text":"采用一阶差分法估计一阶自相关模型，适合于（）。","options":[{"key":"A","label":"\\(-1<\\rho<0\\)"},{"key":"B","label":"\\(0<\\rho<1\\)"},{"key":"C","label":"\\(\\rho\\approx1\\)"},{"key":"D","label":"\\(\\rho\\approx0\\)"}],"answer":["C"],"knowledge":"一阶差分法 / 一阶自相关","sourcePage":24,"needsReview":false,"knowledgeKey":"serial","analysis":"一阶差分法适合一阶自相关系数接近1的情形，所以选 \\(\\rho\\approx1\\)。"},{"id":127,"type":"单选题","section":"单选题","text":"在修正异方差的方法中，不正确的是()","options":[{"key":"A","label":"对模型的对数变换法"},{"key":"B","label":"对原模型变换的方法"},{"key":"C","label":"加权最小二乘法"},{"key":"D","label":"两阶段最小二乘法"}],"answer":["D"],"knowledge":"","sourcePage":24,"needsReview":false}]</script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [["\\(", "\\)"]],
+        displayMath: [["\\[", "\\]"]]
+      },
+      chtml: { scale: 1 }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+  <script>
+    const questionBank = JSON.parse(document.getElementById("question-data").textContent);
+    const stage = document.querySelector("#stage");
+    const progressText = document.querySelector("#progressText");
+    const sectionText = document.querySelector("#sectionText");
+    const barFill = document.querySelector("#barFill");
+    let activeQuestions = [...questionBank];
+    let mode = "full";
+    let currentIndex = 0;
+    let touchStartX = 0;
+    let touchStartY = 0;
+    const selectedAnswers = new Map();
+
+    const KNOWLEDGE = {
+      rank: {
+        formulaName: "Spearman 等级相关系数",
+        formulaNote: "等级相关先把原始数值变成排名，再计算排名之间的相关。",
+        formulas: ["\\[\\rho_s=1-\\frac{6\\sum d_i^2}{n(n^2-1)}\\]"],
+        explanation: "异方差诊断里常看某个解释变量与残差绝对值是否相关，而不是直接看残差本身。",
+        memory: "等级相关看排名，不直接看原数值。"
+      },
+      hetero: {
+        formulaName: "异方差：误差方差不相同",
+        formulaNote: "异方差属于误差方差问题。",
+        formulas: ["\\[Var(u_i\\mid X_i)=\\sigma^2\\quad\\text{同方差}\\]", "\\[Var(u_i\\mid X_i)=\\sigma_i^2\\quad\\text{异方差}\\]"],
+        explanation: "异方差主要影响效率、标准误和检验可靠性，不直接等于 OLS 有偏。",
+        memory: "异方差看方差。"
+      },
+      serial: {
+        formulaName: "序列相关：相邻误差相关",
+        formulaNote: "序列相关会影响常规标准误。",
+        formulas: ["\\[u_t=\\rho u_{t-1}+v_t\\]", "\\[DW\\approx2(1-\\hat\\rho)\\]"],
+        explanation: "自相关会让 t 检验和 F 检验不可靠，但不能机械说 t 值一定偏大或偏小。",
+        memory: "自相关影响检验可靠性。"
+      },
+      dw: {
+        formulaName: "Durbin-Watson 检验",
+        formulaNote: "DW 用残差相邻差值判断一阶自相关。",
+        formulas: ["\\[DW=\\frac{\\sum_{t=2}^{n}(e_t-e_{t-1})^2}{\\sum_{t=1}^{n}e_t^2}\\]"],
+        explanation: "DW 检验的原假设通常是 \\(H_0:\\rho=0\\)，即不存在一阶自相关。",
+        memory: "DW 接近 2 通常表示无一阶自相关。"
+      },
+      ols: {
+        formulaName: "OLS：无偏看均值，有效看方差",
+        formulaNote: "无偏和有效是两个判断。",
+        formulas: ["\\[E(u_i\\mid X_i)=0\\Rightarrow OLS\\text{通常无偏}\\]", "\\[Var(u_i\\mid X_i)=\\sigma^2\\Rightarrow OLS\\text{经典条件下有效}\\]"],
+        explanation: "异方差通常破坏有效性，不必然破坏无偏性。",
+        memory: "无偏看均值，最小方差看方差。"
+      },
+      wls: {
+        formulaName: "加权最小二乘 WLS",
+        formulaNote: "误差波动不同，就给观测分配不同权重。",
+        formulas: ["\\[\\min\\sum_{i=1}^{n}w_i e_i^2\\]", "\\[w_i\\propto\\frac{1}{\\sigma_i^2}\\]"],
+        explanation: "误差波动大的观测权重小，误差波动小的观测权重大。",
+        memory: "WLS 用权重处理异方差。"
+      },
+      r2: {
+        formulaName: "拟合优度与调整 R²",
+        formulaNote: "R² 衡量拟合程度，调整 R² 会惩罚变量过多。",
+        formulas: ["\\[R^2=1-\\frac{SSE}{SST}\\]", "\\[\\bar R^2=1-(1-R^2)\\frac{n-1}{n-k-1}\\]"],
+        explanation: "变量越多 R² 越容易上升，所以比较模型时常看调整 R²。",
+        memory: "R² 看拟合，调整 R² 考虑变量个数。"
+      },
+      default: {
+        formulaName: "本题核心概念",
+        formulaNote: "先抓题干关键词，再判断选项是否准确。",
+        formulas: [],
+        explanation: "判断题整句话都对才选对；选择题要看选项是否和概念、公式或 R 函数完全对应。",
+        memory: "概念题先拆关键词。"
+      }
+    };
+
+    function detectKnowledge(question) {
+      const text = question.text + " " + (question.knowledge || "");
+      if (/等级相关|Spearman/.test(text)) return KNOWLEDGE.rank;
+      if (/DW|Durbin/.test(text)) return KNOWLEDGE.dw;
+      if (/序列相关|自相关/.test(text)) return KNOWLEDGE.serial;
+      if (/加权|WLS|权函数|权数|权重/.test(text)) return KNOWLEDGE.wls;
+      if (/异方差/.test(text)) return /无偏|最小方差|OLS|普通最小二乘/.test(text) ? KNOWLEDGE.ols : KNOWLEDGE.hetero;
+      if (/R\^2|R2|R²|拟合优度|判定系数|调整|SSE|SSR|SST/.test(text)) return KNOWLEDGE.r2;
+      return KNOWLEDGE.default;
+    }
+
+    function answerText(question, keys) {
+      if (!keys || keys.length === 0) return "待校对";
+      return keys.map((key) => {
+        const option = question.options.find((item) => item.key === key);
+        return option ? option.key + ". " + option.label : key;
+      }).join("；");
+    }
+
+    function isCorrect(question, selected) {
+      if (!selected || selected.length !== question.answer.length) return false;
+      return [...selected].sort().join("|") === [...question.answer].sort().join("|");
+    }
+
+    function makeAnalysis(question, knowledge) {
+      const ans = answerText(question, question.answer);
+      if (question.analysis) return "本题答案：" + ans + "。" + question.analysis;
+      if (question.type === "判断题") {
+        return question.answer.includes("A")
+          ? "本题答案：" + ans + "。题干整体成立。" + knowledge.memory
+          : "本题答案：" + ans + "。题干里有不准确或过于绝对的地方，所以不能判对。" + knowledge.memory;
+      }
+      return "本题答案：" + ans + "。" + knowledge.memory;
+    }
+
+    function shuffle(list) {
+      const copy = [...list];
+      for (let i = copy.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function answeredCount() {
+      return activeQuestions.filter((question) => (selectedAnswers.get(question.id) || []).length).length;
+    }
+
+    function correctCount() {
+      return activeQuestions.filter((question) => isCorrect(question, selectedAnswers.get(question.id) || [])).length;
+    }
+
+    function renderMath(target = stage) {
+      if (window.MathJax?.typesetPromise) window.MathJax.typesetPromise([target]).catch(() => {});
+    }
+
+    function renderQuestion(question) {
+      const selected = selectedAnswers.get(question.id) || [];
+      const revealed = selected.length > 0;
+      const correct = isCorrect(question, selected);
+      const knowledge = detectKnowledge(question);
+      const formulaBlock = knowledge.formulas.length ? '<div class="formula-box"><h4>' + knowledge.formulaName + '</h4><p>' + knowledge.formulaNote + '</p>' + knowledge.formulas.map((formula) => '<div>' + formula + '</div>').join("") + '</div>' : "";
+      return '<article class="card">' +
+        '<div class="q-head"><div><span class="pill">' + question.type + '</span></div><span class="source">原题 ' + question.id + '</span></div>' +
+        '<div class="stem">' + question.text + '</div>' +
+        '<div class="options">' + question.options.map((option) => {
+          const isSelected = selected.includes(option.key);
+          const isAnswer = question.answer.includes(option.key);
+          const state = revealed ? (isAnswer ? "correct" : (isSelected ? "wrong" : "")) : "";
+          return '<button class="option ' + (isSelected ? "selected" : "") + ' ' + state + '" type="button" data-answer="' + option.key + '"><span class="key">' + option.key + '</span><span>' + option.label + '</span></button>';
+        }).join("") + '</div>' +
+        '<p class="hint">' + (question.type === "多选题" ? "多选题可继续点选或取消，反馈实时更新。" : "点击选项后自动显示答案和讲解。") + '</p>' +
+        '<div class="answer-panel" ' + (revealed ? "" : "hidden") + '><div><span>正确答案</span><strong>' + answerText(question, question.answer) + '</strong></div><div><span>你的选择</span><strong>' + answerText(question, selected) + '</strong></div><b class="' + (correct ? "ok" : "bad") + '">' + (correct ? "回答正确" : "再看一遍") + '</b></div>' +
+        '<div class="explain-panel" ' + (revealed ? "" : "hidden") + '><h4>' + knowledge.formulaName + '</h4>' + formulaBlock + '<p>' + knowledge.explanation + '</p><div class="analysis-box"><span>本题解析</span><p>' + makeAnalysis(question, knowledge) + '</p></div></div>' +
+        '<div class="mobile-panel"><div class="panel-buttons"><button type="button" data-prev ' + (currentIndex === 0 ? "disabled" : "") + '>上一题</button><button type="button" data-mode-toggle>' + (mode === "random" ? "完整" : "随机") + '</button><button type="button" data-theme>明暗</button><button type="button" data-next ' + (currentIndex === activeQuestions.length - 1 ? "disabled" : "") + '>下一题</button></div><div class="panel-stats"><span>已答 ' + answeredCount() + '</span><span>正确 ' + correctCount() + '</span></div></div>' +
+        '</article>';
+    }
+
+    function updateTop() {
+      const question = activeQuestions[currentIndex];
+      progressText.textContent = "第 " + (currentIndex + 1) + " / " + activeQuestions.length + " 题";
+      sectionText.textContent = mode === "random" ? "随机40题" : question.section;
+      barFill.style.width = ((currentIndex + 1) / activeQuestions.length * 100) + "%";
+    }
+
+    function bindEvents(root = stage) {
+      const question = activeQuestions[currentIndex];
+      root.querySelectorAll("[data-answer]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const current = selectedAnswers.get(question.id) || [];
+          const key = button.dataset.answer;
+          if (question.type === "多选题") {
+            selectedAnswers.set(question.id, current.includes(key) ? current.filter((item) => item !== key) : [...current, key]);
+          } else {
+            selectedAnswers.set(question.id, [key]);
+          }
+          mount("same");
+        });
+      });
+      root.querySelector("[data-prev]")?.addEventListener("click", () => go(-1));
+      root.querySelector("[data-next]")?.addEventListener("click", () => go(1));
+      root.querySelector("[data-mode-toggle]")?.addEventListener("click", () => {
+        if (mode === "random") {
+          activeQuestions = [...questionBank];
+          mode = "full";
+          currentIndex = 0;
+          mount("prev");
+          return;
+        }
+        activeQuestions = shuffle(questionBank).slice(0, Math.min(40, questionBank.length));
+        mode = "random";
+        currentIndex = 0;
+        mount("next");
+      });
+      root.querySelector("[data-theme]")?.addEventListener("click", () => document.body.classList.toggle("dark"));
+    }
+
+    function mount(direction = "same") {
+      updateTop();
+      const oldSlide = stage.querySelector(".slide");
+      const slide = document.createElement("section");
+      slide.className = "slide " + (direction === "next" ? "enter-right" : direction === "prev" ? "enter-left" : "enter-pop");
+      slide.innerHTML = renderQuestion(activeQuestions[currentIndex]);
+      if (!oldSlide || direction === "same") {
+        stage.innerHTML = "";
+        stage.appendChild(slide);
+        requestAnimationFrame(() => slide.classList.add("active"));
+      } else {
+        oldSlide.classList.add(direction === "next" ? "exit-left" : "exit-right");
+        stage.appendChild(slide);
+        requestAnimationFrame(() => slide.classList.add("active"));
+        setTimeout(() => oldSlide.remove(), 360);
+      }
+      bindEvents(slide);
+      renderMath(slide);
+    }
+
+    function go(step) {
+      const next = currentIndex + step;
+      if (next < 0 || next >= activeQuestions.length) return;
+      currentIndex = next;
+      mount(step > 0 ? "next" : "prev");
+    }
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowRight") go(1);
+      if (event.key === "ArrowLeft") go(-1);
+    });
+
+    stage.addEventListener("touchstart", (event) => {
+      const touch = event.changedTouches[0];
+      touchStartX = touch.clientX;
+      touchStartY = touch.clientY;
+    }, { passive: true });
+
+    stage.addEventListener("touchend", (event) => {
+      const touch = event.changedTouches[0];
+      const dx = touch.clientX - touchStartX;
+      const dy = touch.clientY - touchStartY;
+      if (Math.abs(dx) < 55 || Math.abs(dx) < Math.abs(dy) * 1.2) return;
+      if (dx < 0) go(1);
+      if (dx > 0) go(-1);
+    }, { passive: true });
+
+    mount("next");
+  </script>
+</body>
+</html>

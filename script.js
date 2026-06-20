@@ -3504,10 +3504,15 @@ function renderQuestionCard(question, indexInSection) {
       </div>
       <p class="question-text">${question.text}</p>
       <div class="options">
-        ${question.options.map((option) => `<button class="option ${selected.includes(option.key) ? "selected" : ""}" type="button" data-id="${question.id}" data-answer="${option.key}"><span class="key">${option.key}</span><span>${option.label}</span></button>`).join("")}
+        ${question.options.map((option) => {
+          const isSelected = selected.includes(option.key);
+          const isAnswer = question.answer.includes(option.key);
+          const stateClass = submitted ? (isAnswer ? "correct" : (isSelected ? "wrong" : "")) : "";
+          return `<button class="option ${isSelected ? "selected" : ""} ${stateClass}" type="button" data-id="${question.id}" data-answer="${option.key}"><span class="key">${option.key}</span><span>${option.label}</span></button>`;
+        }).join("")}
       </div>
       <div class="answer-actions">
-        <button class="submit-action ${selected.length && !submitted ? "ready" : ""}" type="button" data-submit="${question.id}">${submitted ? "已提交" : "提交本题"}</button>
+        <span class="instant-tip">${selected.length ? "已自动显示答案和讲解" : "选项点击后自动显示答案和讲解，无需提交。"}</span>
         <button class="ghost-action" type="button" data-review="${question.id}">${reviewSet.has(question.id) ? "取消待复习" : "标记待复习"}</button>
       </div>
       <div class="answer-panel" ${submitted ? "" : "hidden"}>
@@ -3535,18 +3540,6 @@ function bindQuestionEvents() {
         selectedAnswers.set(id, current.includes(button.dataset.answer) ? current.filter((key) => key !== button.dataset.answer) : [...current, button.dataset.answer]);
       } else {
         selectedAnswers.set(id, [button.dataset.answer]);
-      }
-      submittedAnswers.delete(id);
-      renderSections();
-      document.querySelector(`#q-${id}`)?.scrollIntoView({ block: "center" });
-    });
-  });
-  paperFlow.querySelectorAll("[data-submit]").forEach((button) => {
-    button.addEventListener("click", () => {
-      const id = Number(button.dataset.submit);
-      if (!(selectedAnswers.get(id) || []).length) {
-        showToast("先选择答案，再提交本题。");
-        return;
       }
       submittedAnswers.add(id);
       renderSections();
@@ -3593,7 +3586,7 @@ document.querySelector("#randomExam").addEventListener("click", () => {
 document.querySelector("#resetOrder").addEventListener("click", () => {
   mode = "full";
   activeQuestions = [...questionBank];
-  modeHint.textContent = "完整题库 · 判断题 / 多选题 / 单选题";
+  modeHint.textContent = "电脑版 · 连续刷题，选项点击即反馈";
   renderSections();
   window.scrollTo({ top: 0, behavior: "smooth" });
 });
@@ -3616,6 +3609,6 @@ document.querySelector("#decreaseFont").addEventListener("click", () => {
 document.body.id = "top";
 
 activeQuestions = [...questionBank];
-modeHint.textContent = "完整题库 · 判断题 / 多选题 / 单选题";
+modeHint.textContent = "电脑版 · 连续刷题，选项点击即反馈";
 renderSections();
 
