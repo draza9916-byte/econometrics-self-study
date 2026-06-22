@@ -544,43 +544,43 @@
       if (/评价过高/.test(t)) return "本题按常见正序列相关情形判断为对：正自相关常使标准误被低估，\\(t\\) 值显得偏大，导致检验不可靠。";
       if (/异方差仅影响T检验/.test(t)) return "本题错在“仅影响 T 检验”。异方差会影响常规标准误，所以 \\(t\\) 检验和 \\(F\\) 检验都可能受影响。";
       if (/虽是有偏|不再无偏|导致最小二乘估计量不再无偏/.test(t)) return "本题错在把异方差和有偏混在一起。若 \\(E(u_i\\mid X_i)=0\\)，OLS 仍可无偏；异方差主要破坏有效性和常规标准误。";
-      if (/不是最小方差|最小方差性|最小方差线性无偏/.test(t)) return "本题为对。异方差破坏同方差条件后，OLS 通常不再是线性无偏估计量中方差最小的估计量。";
-      if (/库克距离/.test(t)) return "本题为对。Cook 距离衡量观测点对回归结果的影响，数值大可提示异常点或强影响点。";
-      if (/时间序列数据/.test(t)) return "本题为对。时间序列相邻时期常有惯性和滞后，误差项容易相关。";
-      if (/异方差性是指/.test(t)) return "本题为对。异方差就是误差项方差不相等，即 \\(Var(u_i\\mid X_i)=\\sigma_i^2\\)。";
-      if (/自变量只能是定量变量/.test(t)) return "本题为错。解释变量也可以是定性变量，只要用虚拟变量等方式进入模型。";
-      if (/单值预测/.test(t)) return "本题为对。单值预测就是给出因变量新值的一个点预测值。";
-      if (/统计关系是一种非确定性关系/.test(t)) return "本题为对。统计关系含随机误差，不能由解释变量唯一确定被解释变量。";
-      if (/统计关系是一种确定性的?关系/.test(t)) return "本题为错。统计关系不是确定性函数关系，它包含随机误差。";
-      if (/函数关系是一种确定性的关系/.test(t)) return "本题为对。函数关系中给定自变量后，因变量可以被唯一确定。";
-      if (/DW检验法主要用于检验一阶自相关/.test(t)) return "本题为对。DW 统计量比较相邻残差，主要用于一阶自相关。";
-      if (/方差Var|方差.*自变量取值有关/.test(t)) return "本题为错。经典同方差假设要求误差方差不随解释变量取值变化。";
-      if (/残差图分析法足以完全排除/.test(t)) return "本题为错。残差图只是直观初步诊断，不能完全排除异方差。";
-      if (/随机分布.*自相关|随机分布.*异方差/.test(t)) return "本题为错。残差随机分布通常说明没有明显系统性模式，不能据此说存在自相关或异方差。";
-      if (/关系是对等/.test(t)) return "本题为错。回归中 \\(y\\) 是被解释变量，\\(x\\) 是解释变量，二者角色不对等。";
-      if (/处理异方差后.*自相关/.test(t)) return "本题为对。二者可能由同一模型设定问题引起，修正异方差后自相关有时会改善，但仍应分别诊断。";
+      if (/不是最小方差|最小方差性|最小方差线性无偏/.test(t)) return "异方差破坏同方差条件后，OLS 通常不再是线性无偏估计量中方差最小的估计量。";
+      if (/库克距离/.test(t)) return "Cook 距离衡量观测点对回归结果的影响，数值大可提示异常点或强影响点。";
+      if (/时间序列数据/.test(t)) return "时间序列相邻时期常有惯性和滞后，误差项容易相关。";
+      if (/异方差性是指/.test(t)) return "异方差就是误差项方差不相等，即 \\(Var(u_i\\mid X_i)=\\sigma_i^2\\)。";
+      if (/自变量只能是定量变量/.test(t)) return "解释变量也可以是定性变量，只要用虚拟变量等方式进入模型。";
+      if (/单值预测/.test(t)) return "单值预测就是给出因变量新值的一个点预测值。";
+      if (/统计关系是一种非确定性关系/.test(t)) return "统计关系含随机误差，不能由解释变量唯一确定被解释变量。";
+      if (/统计关系是一种确定性的?关系/.test(t)) return "统计关系不是确定性函数关系，它包含随机误差。";
+      if (/函数关系是一种确定性的关系/.test(t)) return "函数关系中给定自变量后，因变量可以被唯一确定。";
+      if (/DW检验法主要用于检验一阶自相关/.test(t)) return "DW 统计量比较相邻残差，主要用于一阶自相关。";
+      if (/方差Var|方差.*自变量取值有关/.test(t)) return "经典同方差假设要求误差方差不随解释变量取值变化。";
+      if (/残差图分析法足以完全排除/.test(t)) return "残差图只是直观初步诊断，不能完全排除异方差。";
+      if (/随机分布.*自相关|随机分布.*异方差/.test(t)) return "残差随机分布通常说明没有明显系统性模式，不能据此说存在自相关或异方差。";
+      if (/关系是对等/.test(t)) return "回归中 \\(y\\) 是被解释变量，\\(x\\) 是解释变量，二者角色不对等。";
+      if (/处理异方差后.*自相关/.test(t)) return "二者可能由同一模型设定问题引起，修正异方差后自相关有时会改善，但仍应分别诊断。";
       if (/异方差和自相关问题可同时处理/.test(t)) return "本题错在“无需逐一检验”。异方差看误差方差是否相等，自相关看不同时期误差项是否相关；二者可能同时存在，但诊断指标和修正方法不同，不能跳过逐一检验。";
-      if (/经济变量的滞后性/.test(t)) return "本题为对。经济变量的滞后和惯性容易使相邻时期误差相关。";
-      if (/遗漏关键变量/.test(t)) return "本题为对。遗漏变量进入误差项后，若它有趋势或连续性，就可能导致误差项自相关。";
-      if (/规律性波动/.test(t)) return "本题为对。残差出现规律性波动或扇形变化，说明误差方差可能随解释变量变化。";
-      if (/必须是线性函数/.test(t)) return "本题为错。线性回归主要要求参数线性，不要求解释变量只能原始线性进入。";
-      if (/抽样波动非常敏感/.test(t)) return "本题为错。序列相关主要影响有效性、标准误和检验可靠性，“对抽样波动敏感”不是准确表述。";
-      if (/差分变换/.test(t)) return "本题为对。不恰当差分或修匀会改变序列动态结构，可能带来序列相关。";
-      if (/参数估计量的方差增大/.test(t)) return "本题为对。异方差会使 OLS 不再有效，常规方差和标准误估计失真。";
-      if (/误差项之间存在相关性|也称为序列相关/.test(t)) return "本题为对。自相关就是不同时期误差项相关。";
-      if (/横坐标只能是自变量/.test(t)) return "本题为错。残差图横坐标可以是解释变量、拟合值或时间顺序等。";
-      if (/协方差为0/.test(t)) return "本题为错。自相关指不同时期误差项协方差不为 0；协方差为 0 才是不自相关。";
-      if (/F检验.*每一个自变量/.test(t)) return "本题为错。\\(F\\) 检验看模型整体，单个变量显著性通常看 \\(t\\) 检验。";
-      if (/截面数据/.test(t)) return "本题为对。截面数据中个体差异大，误差方差更容易不相等。";
-      if (/不会影响.*F检验.*t检验/.test(t)) return "本题为错。序列相关会使常规标准误和方差估计不可靠，\\(t\\)、\\(F\\) 检验都可能失效。";
-      if (/均方误差.*低估/.test(t)) return "本题为对。序列相关下按独立误差计算的均方误差可能偏小，使检验过于乐观。";
-      if (/解释变量越多/.test(t)) return "本题为错。变量多不等于模型准确，可能过拟合或产生多重共线性。";
-      if (/n>p/.test(t)) return "本题为对。样本量应大于待估参数个数，否则自由度不足。";
-      if (/误差项.*确定性变量/.test(t)) return "本题为错。误差项表示随机扰动，应作为随机变量处理。";
-      if (/一般形式.*确定性函数/.test(t)) return "本题为对。\\(y=f(x_1,\\ldots,x_p)+\\varepsilon\\) 中 \\(f\\) 是确定性系统部分，\\(\\varepsilon\\) 是随机误差。";
-      if (/蛛网现象.*异方差/.test(t)) return "本题为错。蛛网现象更容易带来序列自相关，不是异方差的典型原因。";
-      if (/蛛网现象.*自相关/.test(t)) return "本题为对。蛛网现象有滞后反馈，误差容易沿时间传递。";
-      if (/多元线性回归模型.*多个自变量/.test(t)) return "本题为对。多元线性回归研究一个因变量与多个解释变量之间的线性关系。";
+      if (/经济变量的滞后性/.test(t)) return "经济变量的滞后和惯性容易使相邻时期误差相关。";
+      if (/遗漏关键变量/.test(t)) return "遗漏变量进入误差项后，若它有趋势或连续性，就可能导致误差项自相关。";
+      if (/规律性波动/.test(t)) return "残差出现规律性波动或扇形变化，说明误差方差可能随解释变量变化。";
+      if (/必须是线性函数/.test(t)) return "线性回归主要要求参数线性，不要求解释变量只能原始线性进入。";
+      if (/抽样波动非常敏感/.test(t)) return "序列相关主要影响有效性、标准误和检验可靠性，“对抽样波动敏感”不是准确表述。";
+      if (/差分变换/.test(t)) return "不恰当差分或修匀会改变序列动态结构，可能带来序列相关。";
+      if (/参数估计量的方差增大/.test(t)) return "异方差会使 OLS 不再有效，常规方差和标准误估计失真。";
+      if (/误差项之间存在相关性|也称为序列相关/.test(t)) return "自相关就是不同时期误差项相关。";
+      if (/横坐标只能是自变量/.test(t)) return "残差图横坐标可以是解释变量、拟合值或时间顺序等。";
+      if (/协方差为0/.test(t)) return "自相关指不同时期误差项协方差不为 0；协方差为 0 才是不自相关。";
+      if (/F检验.*每一个自变量/.test(t)) return "\\(F\\) 检验看模型整体，单个变量显著性通常看 \\(t\\) 检验。";
+      if (/截面数据/.test(t)) return "截面数据中个体差异大，误差方差更容易不相等。";
+      if (/不会影响.*F检验.*t检验/.test(t)) return "序列相关会使常规标准误和方差估计不可靠，\\(t\\)、\\(F\\) 检验都可能失效。";
+      if (/均方误差.*低估/.test(t)) return "序列相关下按独立误差计算的均方误差可能偏小，使检验过于乐观。";
+      if (/解释变量越多/.test(t)) return "变量多不等于模型准确，可能过拟合或产生多重共线性。";
+      if (/n>p/.test(t)) return "样本量应大于待估参数个数，否则自由度不足。";
+      if (/误差项.*确定性变量/.test(t)) return "误差项表示随机扰动，应作为随机变量处理。";
+      if (/一般形式.*确定性函数/.test(t)) return "\\(y=f(x_1,\\ldots,x_p)+\\varepsilon\\) 中 \\(f\\) 是确定性系统部分，\\(\\varepsilon\\) 是随机误差。";
+      if (/蛛网现象.*异方差/.test(t)) return "蛛网现象更容易带来序列自相关，不是异方差的典型原因。";
+      if (/蛛网现象.*自相关/.test(t)) return "蛛网现象有滞后反馈，误差容易沿时间传递。";
+      if (/多元线性回归模型.*多个自变量/.test(t)) return "多元线性回归研究一个因变量与多个解释变量之间的线性关系。";
       return "";
     }
 
@@ -591,10 +591,10 @@
       if (direct) return "本题答案：" + ans + "。" + direct;
       if (question.type === "判断题") {
         return question.answer.includes("A")
-          ? "本题答案：" + ans + "。题干整体成立。" + knowledge.memory
-          : "本题答案：" + ans + "。题干里有不准确或过于绝对的地方，所以不能判对。" + knowledge.memory;
+          ? "本题答案：" + ans + "。题干表述与本题知识点一致，所以选“对”。"
+          : "本题答案：" + ans + "。题干中有关键表述与本题知识点不一致，所以选“错”。";
       }
-      return "本题答案：" + ans + "。" + knowledge.memory;
+      return "本题答案：" + ans + "。" + (knowledge.memory || "结合本题知识点判断选项是否与定义、公式或适用条件一致。");
     }
 
     function shuffle(list) {
@@ -624,6 +624,7 @@
       const correct = isCorrect(question, selected);
       const knowledge = detectKnowledge(question);
       const formulaBlock = knowledge.formulas.length ? '<div class="formula-box"><h4>' + knowledge.formulaName + '</h4><p>' + knowledge.formulaNote + '</p>' + knowledge.formulas.map((formula) => '<div>' + formula + '</div>').join("") + '</div>' : "";
+      const conceptText = knowledge.explanation ? '<p>' + knowledge.explanation + '</p>' : "";
       return '<article class="card">' +
         '<div class="q-head"><div><span class="pill">' + question.type + '</span></div><span class="source">原题 ' + question.id + '</span></div>' +
         '<div class="stem">' + question.text + '</div>' +
@@ -634,7 +635,7 @@
           return '<button class="option ' + (isSelected ? "selected" : "") + ' ' + state + '" type="button" data-answer="' + option.key + '"><span class="key">' + option.key + '</span><span>' + option.label + '</span></button>';
         }).join("") + '</div>' +
         '<div class="answer-panel" ' + (revealed ? "" : "hidden") + '><div><span>正确答案</span><strong>' + answerText(question, question.answer) + '</strong></div><div><span>你的选择</span><strong>' + answerText(question, selected) + '</strong></div><b class="' + (correct ? "ok" : "bad") + '">' + (correct ? "回答正确" : "再看一遍") + '</b></div>' +
-        '<div class="explain-panel" ' + (revealed ? "" : "hidden") + '><h4>' + knowledge.formulaName + '</h4>' + formulaBlock + '<p>' + knowledge.explanation + '</p><div class="analysis-box"><span>本题为什么这样选</span><p>' + makeAnalysis(question, knowledge) + '</p></div></div>' +
+        '<div class="explain-panel" ' + (revealed ? "" : "hidden") + '><h4>' + knowledge.formulaName + '</h4>' + formulaBlock + conceptText + '<div class="analysis-box"><span>本题为什么这样选</span><p>' + makeAnalysis(question, knowledge) + '</p></div></div>' +
         '<div class="mobile-panel"><div class="panel-buttons"><button type="button" data-prev ' + (currentIndex === 0 ? "disabled" : "") + '>上一题</button><button type="button" data-mode-toggle>' + (mode === "random" ? "完整" : "随机") + '</button><button type="button" data-theme>明暗</button><button type="button" data-next ' + (currentIndex === activeQuestions.length - 1 ? "disabled" : "") + '>下一题</button></div><div class="panel-stats"><span>已答 ' + answeredCount() + '</span><span>正确 ' + correctCount() + '</span></div></div>' +
         '</article>';
     }
